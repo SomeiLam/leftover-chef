@@ -29,26 +29,34 @@ const fetchRecipe = async (data: {
 }
 
 const RecipesPage = () => {
-  const { ingredients, imageIngredients, preferences } = useIngredients()
+  const { ingredients, preferences } = useIngredients()
   const [hasFetched, setHasFetched] = useState(false)
-  const [recipes, setRecipes] = useState<RecipeType[] | null>(null)
+  const [recipes, setRecipes] = useState<
+    | {
+        id: string
+        english: RecipeType
+        chinese: RecipeType
+        japanese: RecipeType
+      }[]
+    | null
+  >(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { i18n } = useTranslation()
 
-  const allIngredients = imageIngredients
-    .filter((i) => i.selected)
-    .concat(ingredients)
+  const selectedInggredients = ingredients.filter(
+    (ingredient) => ingredient.selected || !ingredient.fromImage
+  )
 
   // // Fetch the recipe only once when the component mounts.
   useEffect(() => {
     // If ingredients array is empty, don't fetch and mark loading as false.
-    if (allIngredients.length === 0) {
+    if (selectedInggredients.length === 0) {
       setLoading(false)
       return
     }
     const data = {
-      ingredients: allIngredients.map((i) => i.name),
+      ingredients: selectedInggredients.map((i) => i.name),
       preferences,
       language:
         i18n.language === 'zh'
@@ -62,7 +70,12 @@ const RecipesPage = () => {
         .then((json) => {
           if (!hasFetched) {
             const { recipe } = json
-            const flattened = Object.values(recipe) as RecipeType[]
+            const flattened = Object.values(recipe) as {
+              id: string
+              english: RecipeType
+              chinese: RecipeType
+              japanese: RecipeType
+            }[]
             setRecipes(flattened)
             setHasFetched(true)
           }
@@ -75,10 +88,10 @@ const RecipesPage = () => {
           setLoading(false)
         })
     }
-  }, [ingredients, imageIngredients, preferences]) // empty dependency array ensures one-time fetch
+  }, [ingredients, preferences]) // empty dependency array ensures one-time fetch
 
   // If there are no ingredients, show a message to return to the ingredients page.
-  if (allIngredients.length === 0) {
+  if (selectedInggredients.length === 0) {
     return (
       <div className="ml-20">
         <p>

@@ -4,7 +4,6 @@ import ManualInput from '../components/ManualInput'
 import { useIngredients } from '../contexts/IngredientsContext'
 import { motion } from 'framer-motion'
 import { useTranslation } from 'react-i18next'
-import LanguageSelector from '../components/LanguageSelector'
 
 type InputMethod = 'image' | 'text'
 
@@ -37,7 +36,6 @@ const InputPage = () => {
       ) : (
         <ManualInput onMethodChange={setInputMethod} />
       )}
-      <LanguageSelector />
     </motion.div>
   )
 }

@@ -1,10 +1,11 @@
 export default {
   translation: {
-    appName: 'AIシェフ',
+    appName: '余りシェフ',
     nav: {
       savedRecipes: '保存したレシピ',
       createRecipe: 'レシピを作成',
       login: 'ログイン',
+      logout: 'ログアウト',
     },
     loading: {
       upload: '材料をアップロード中...',
@@ -48,6 +49,11 @@ export default {
       passwordsDontMatch: 'パスワードが一致しません',
       resetLinkSent: 'パスワードリセットのリンクをメールで送信しました',
     },
+    save: {
+      noRecipes: 'まだ保存されたレシピがありません！',
+      noRecipesMessage:
+        'レシピがまだ保存されていません。レシピ作成ページに移動して材料を入力してください。',
+    },
     input: {
       title: 'キッチンには何がありますか？',
       subtitle: '材料を美味しい料理に変身させましょう',
@@ -77,9 +83,12 @@ export default {
         protein: 'タンパク質',
         carbs: '炭水化物',
         fat: '脂肪',
+        per100g: '100g あたり',
       },
       noFoodDetected: '画像から食材が検出されませんでした',
       noIngredientsSelected: '選択された食材がありません',
+      noImage: '画像がアップロードされていません',
+      gobackToUpload: 'アップロードに戻る',
     },
     preferences: {
       title: 'レシピをカスタマイズ',
@@ -142,6 +151,7 @@ export default {
       yourIngredients: 'あなたの材料',
       additionalIngredients: '追加の材料',
       instructions: '作り方',
+      note: 'ご注意ください。AI はお選びになった食材やご希望を十分に考慮していますが、最終的な結果には風味とバランスを高めるために、多少の変化や追加の食材が含まれる場合があります。お好みに合わせてレシピを調整してください！🌿',
     },
   },
 }

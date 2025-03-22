@@ -8,6 +8,7 @@ type Ingredient = {
     fat: number
   }
   selected?: boolean
+  fromImage?: boolean
 }
 
 type Step = 'input' | 'ingredients' | 'preferences' | 'recipes' | 'saved'
@@ -25,8 +26,8 @@ type Recipe = {
   time: string
   servings: string
   cuisine: string
-  ingredients: { name: string; portion: string }[]
-  additionalIngredients: string[]
+  ingredients: { name: string; portion: string; unit: string }[]
+  additionalIngredients: { name: string; portion: string; unit: string }[]
   instructions: string[]
   description: string
   preference: Preferences[]

@@ -19,6 +19,7 @@ import { ScrollToTop } from './components/UI'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignupPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import LanguageSelector from './components/LanguageSelector'
 
 const pageTransition = {
   initial: { opacity: 0, x: 100 },
@@ -55,7 +56,7 @@ function App() {
       }}
     >
       <ContextProvider>
-        <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
+        <div className="max-w-screen overflow-x-hidden min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
           <AppBar />
           <ScrollToTop />
           <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
@@ -75,6 +76,7 @@ function App() {
                   element={<ForgotPasswordPage />}
                 />
               </AnimatedRoutes>
+              <LanguageSelector />
             </Suspense>
           </main>
         </div>

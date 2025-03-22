@@ -12,9 +12,15 @@ import {
   Microwave,
 } from 'lucide-react'
 import classNames from 'classnames'
+import { useTranslation } from 'react-i18next'
 
 interface TabsContainerProps {
-  recipes: RecipeType[]
+  recipes: {
+    id: string
+    english: RecipeType
+    chinese: RecipeType
+    japanese: RecipeType
+  }[]
 }
 
 const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
@@ -22,9 +28,16 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
   const [selectedRecipeId, setSelectedRecipeId] = useState<string>(
     recipes[0].id
   )
-
-  // For the mobile accordion layout
   const [openRecipeId, setOpenRecipeId] = useState<string | null>(null)
+  const [servingMultiplier, setServingMultiplier] = useState(1)
+
+  const { t, i18n } = useTranslation()
+  const language =
+    i18n.language === 'zh'
+      ? 'chinese'
+      : i18n.language === 'ja'
+        ? 'japanese'
+        : 'english'
 
   const handleTabClick = (id: string) => {
     setSelectedRecipeId(id)
@@ -52,7 +65,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
           className="flex flex-row gap-1 items-center text-red-800"
         >
           <Amphora className="h-4 w-4" />
-          <p className="text-sm">Traditional</p>
+          <p className="text-sm">{t('preferences.cooking.traditional')}</p>
         </div>
       )
     } else if (pre === 'Microwave only') {
@@ -62,7 +75,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
           className="flex flex-row gap-1 items-center text-blue-800"
         >
           <Microwave className="h-4 w-4" />
-          <p className="text-sm">Microwave</p>
+          <p className="text-sm">{t('preferences.cooking.microwaveOnly')}</p>
         </div>
       )
     } else if (pre === 'Quick cook') {
@@ -72,7 +85,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
           className="flex flex-row gap-1 items-center text-orange-500"
         >
           <FastForward className="h-4 w-4" />
-          <p className="text-sm">Quick</p>
+          <p className="text-sm">{t('preferences.cooking.quickCook')}</p>
         </div>
       )
     } else if (pre === 'Spicy') {
@@ -82,7 +95,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
           className="flex flex-row gap-1 items-center text-red-500"
         >
           <Flame className="h-4 w-4" />
-          <p className="text-sm">Spicy</p>
+          <p className="text-sm">{t('preferences.spiceLevel.spicy')}</p>
         </div>
       )
     } else {
@@ -93,7 +106,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
           className="flex flex-row gap-1 items-center text-green-700"
         >
           <Baby className="h-4 w-4" />
-          <p className="text-sm">Easy</p>
+          <p className="text-sm">{t('preferences.cooking.beginner')}</p>
         </div>
       )
     }
@@ -129,15 +142,17 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
                   >
                     <div className="flex flex-col gap-2 px-3">
                       <div className="flex flex-row gap-3 flex-wrap">
-                        {recipe.preference.length > 0 ? (
-                          recipe.preference?.map((pre) =>
+                        {recipe[language].preference.length > 0 ? (
+                          recipe[language].preference?.map((pre) =>
                             renderPreferenceIcons(pre)
                           )
                         ) : (
                           <div className="h-5" />
                         )}
                       </div>
-                      <h3 className="font-medium truncate">{recipe.title}</h3>
+                      <h3 className="font-medium truncate">
+                        {recipe[language].title}
+                      </h3>
                     </div>
                   </div>
                 ))}
@@ -157,7 +172,11 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.3 }}
                 >
-                  <Recipe recipe={selectedRecipe} />
+                  <Recipe
+                    recipe={selectedRecipe[language]}
+                    setServingMultiplier={setServingMultiplier}
+                    servingMultiplier={servingMultiplier}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>
@@ -185,11 +204,13 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
               >
                 <div className="flex flex-col gap-1 max-w-11/12">
                   <div className="flex flex-row gap-3 flex-wrap">
-                    {recipe.preference?.map((pre) =>
+                    {recipe[language].preference?.map((pre) =>
                       renderPreferenceIcons(pre)
                     )}
                   </div>
-                  <h3 className="font-medium truncate">{recipe.title}</h3>
+                  <h3 className="font-medium truncate">
+                    {recipe[language].title}
+                  </h3>
                 </div>
                 {/* Icon or indicator for open/close */}
                 <span className="text-sm text-gray-500">
@@ -209,7 +230,11 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
                     className="overflow-hidden bg-white"
                   >
                     <div className="p-3" id={recipe.id}>
-                      <Recipe recipe={recipe} />
+                      <Recipe
+                        recipe={recipe[language]}
+                        setServingMultiplier={setServingMultiplier}
+                        servingMultiplier={servingMultiplier}
+                      />
                     </div>
                   </motion.div>
                 )}
@@ -221,12 +246,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
 
       {/* Disclaimer or note */}
       <div className="bg-white rounded-xl p-6 shadow-lg">
-        <p className="text-gray-600 leading-relaxed">
-          Please note that while the AI carefully considers your selected
-          ingredients and preferences, the final result may include slight
-          variations or additional ingredients to enhance flavor and balance.
-          Feel free to adjust the recipe to suit your taste! 🌿
-        </p>
+        <p className="text-gray-600 leading-relaxed">{t('recipes.note')}</p>
       </div>
     </div>
   )

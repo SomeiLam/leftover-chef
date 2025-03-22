@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Globe } from 'lucide-react'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Lang, useIngredients } from '../contexts/IngredientsContext'
 
 const languages: { code: string; name: Lang }[] = [
@@ -11,7 +11,7 @@ const languages: { code: string; name: Lang }[] = [
 ]
 
 const LanguageSelector = () => {
-  const { i18n } = useTranslation()
+  const { i18n, t } = useTranslation()
   const [isHovered, setIsHovered] = useState(false)
   const { updateLanguage } = useIngredients()
 
@@ -19,6 +19,10 @@ const LanguageSelector = () => {
     i18n.changeLanguage(lang.code)
     updateLanguage(lang.name)
   }
+
+  useEffect(() => {
+    document.title = t('appName')
+  }, [i18n.language, t])
 
   return (
     <motion.div

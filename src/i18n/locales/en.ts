@@ -1,10 +1,11 @@
 export default {
   translation: {
-    appName: 'AI Chef',
+    appName: 'Leftover Chef',
     nav: {
-      savedRecipes: 'Saved Recipes',
+      savedRecipes: 'Saved Recipe',
       createRecipe: 'Create Recipe',
       login: 'Login',
+      logout: 'Logout',
     },
     loading: {
       upload: 'Uploading your ingredients...',
@@ -48,6 +49,11 @@ export default {
       passwordsDontMatch: 'Passwords do not match',
       resetLinkSent: 'Password reset link has been sent to your email',
     },
+    save: {
+      noRecipes: 'No saved recipes yet!',
+      noRecipesMessage:
+        "You haven't saved any recipes. Go to the create recipe page and input your ingredients.",
+    },
     input: {
       title: "What's in your kitchen?",
       subtitle: "Let's turn your ingredients into delicious meals",
@@ -80,9 +86,12 @@ export default {
         protein: 'Protein',
         carbs: 'Carbs',
         fat: 'Fat',
+        per100g: 'per 100g',
       },
       noFoodDetected: 'The image did not detect any food.',
       noIngredientsSelected: 'No ingredients are selected',
+      noImage: 'No image was uploaded',
+      gobackToUpload: 'Go back to upload',
     },
     preferences: {
       title: 'Customize Your Recipe',
@@ -146,6 +155,7 @@ export default {
       yourIngredients: 'Your Ingredients',
       additionalIngredients: 'Additional Ingredients',
       instructions: 'Instructions',
+      note: 'Please note that while the AI carefully considers your selected ingredients and preferences, the final result may include slight variations or additional ingredients to enhance flavor and balance. Feel free to adjust the recipe to suit your taste! 🌿',
     },
   },
 }

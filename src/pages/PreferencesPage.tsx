@@ -8,13 +8,13 @@ import { useNavigate } from 'react-router-dom'
 
 const PreferencesPage = () => {
   const { t } = useTranslation()
-  const { ingredients, imageIngredients, preferences, updatePreferences } =
-    useIngredients()
+  const { ingredients, preferences, updatePreferences } = useIngredients()
   const navigate = useNavigate()
 
-  const allIngredients = imageIngredients
-    .filter((i) => i.selected)
-    .concat(ingredients)
+  const selectedIngredients = ingredients.filter(
+    (ingredient) => ingredient.selected || !ingredient.fromImage
+  )
+
   const handlePreferenceClick = (
     type: 'traditional' | 'quickCook' | 'beginner' | 'microwaveOnly'
   ) => {
@@ -73,13 +73,13 @@ const PreferencesPage = () => {
         {/* Ingredients Summary */}
         <section className="bg-white rounded-xl p-6 shadow-sm border border-gray-200">
           <h2 className="text-xl font-semibold text-gray-800 mb-4">
-            {allIngredients.length > 0
+            {selectedIngredients.length > 0
               ? t('preferences.selectedIngredients')
               : t('preferences.noIngredients')}
           </h2>
           <div className="flex flex-wrap gap-2">
-            {allIngredients.length > 0 ? (
-              allIngredients.map((ingredient) => (
+            {selectedIngredients.length > 0 ? (
+              selectedIngredients.map((ingredient) => (
                 <div
                   key={ingredient.id}
                   className="bg-purple-50 text-purple-700 px-3 py-1 rounded-full text-sm"
@@ -102,7 +102,7 @@ const PreferencesPage = () => {
           </div>
         </section>
 
-        {allIngredients.length > 0 && (
+        {selectedIngredients.length > 0 && (
           <div className="space-y-6">
             {/* Cooking Preferences */}
             <section className="space-y-4">
@@ -268,7 +268,7 @@ const PreferencesPage = () => {
 
         {/* Ready to Go Button */}
 
-        {allIngredients.length > 0 && (
+        {selectedIngredients.length > 0 && (
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
