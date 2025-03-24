@@ -19,7 +19,6 @@ import { ScrollToTop } from './components/UI'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignupPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
-import LanguageSelector from './components/LanguageSelector'
 
 const pageTransition = {
   initial: { opacity: 0, x: 100 },
@@ -76,7 +75,6 @@ function App() {
                   element={<ForgotPasswordPage />}
                 />
               </AnimatedRoutes>
-              <LanguageSelector />
             </Suspense>
           </main>
         </div>

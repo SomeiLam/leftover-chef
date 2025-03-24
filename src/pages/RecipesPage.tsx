@@ -10,7 +10,7 @@ import Header from '../components/Recipe/Header'
 import { Loading } from '../components/Loading'
 import { useTranslation } from 'react-i18next'
 
-const API_URL = 'http://localhost:5000'
+const API_URL = import.meta.env.VITE_BACKEND_API
 
 const fetchRecipe = async (data: {
   ingredients: string[]
@@ -31,15 +31,7 @@ const fetchRecipe = async (data: {
 const RecipesPage = () => {
   const { ingredients, preferences } = useIngredients()
   const [hasFetched, setHasFetched] = useState(false)
-  const [recipes, setRecipes] = useState<
-    | {
-        id: string
-        english: RecipeType
-        chinese: RecipeType
-        japanese: RecipeType
-      }[]
-    | null
-  >(null)
+  const [recipes, setRecipes] = useState<RecipeType[] | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const { i18n } = useTranslation()
@@ -70,12 +62,7 @@ const RecipesPage = () => {
         .then((json) => {
           if (!hasFetched) {
             const { recipe } = json
-            const flattened = Object.values(recipe) as {
-              id: string
-              english: RecipeType
-              chinese: RecipeType
-              japanese: RecipeType
-            }[]
+            const flattened = Object.values(recipe) as RecipeType[]
             setRecipes(flattened)
             setHasFetched(true)
           }
@@ -93,12 +80,10 @@ const RecipesPage = () => {
   // If there are no ingredients, show a message to return to the ingredients page.
   if (selectedInggredients.length === 0) {
     return (
-      <div className="ml-20">
-        <p>
-          No ingredients available. Please return to the ingredients page to add
-          some ingredients.
-        </p>
-      </div>
+      <p className="ml-10">
+        No ingredients available. Please return to the ingredients page to add
+        some ingredients.
+      </p>
     )
   }
 

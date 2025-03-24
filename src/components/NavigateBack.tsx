@@ -1,4 +1,3 @@
-import React from 'react'
 import { ChevronLeft } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
@@ -29,20 +28,20 @@ const NavigateBack = () => {
   }
 
   return (
-    <div className="fixed top-20 left-0 right-0 z-40 pointer-events-none">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative">
-        <div className="flex justify-between items-center">
-          {showPrevious && (
-            <motion.button
-              whileHover={{ scale: 1.1, x: -5 }}
-              whileTap={{ scale: 0.9 }}
-              className="p-2 rounded-full bg-white shadow-lg text-gray-600 hover:text-purple-500 transition-colors pointer-events-auto"
-              onClick={handlePrevious}
-            >
-              <ChevronLeft className="w-6 h-6" />
-            </motion.button>
-          )}
-        </div>
+    <div className="fixed top-18 left-2 right-0 z-40 pointer-events-none">
+      {/* <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative"> */}
+      <div className="flex justify-between items-center">
+        {showPrevious && (
+          <motion.button
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.9 }}
+            className="text-gray-600 bg-white rounded-full p-1 hover:text-purple-500 transition-colors pointer-events-auto"
+            onClick={handlePrevious}
+          >
+            <ChevronLeft className="w-6 h-6" />
+          </motion.button>
+        )}
+        {/* </div> */}
       </div>
     </div>
   )

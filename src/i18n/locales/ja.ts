@@ -18,6 +18,7 @@ export default {
       back: '戻る',
       cancel: 'キャンセル',
       save: '保存',
+      remove: '削除',
     },
     auth: {
       welcome: 'おかえりなさい',

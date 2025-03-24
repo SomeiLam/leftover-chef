@@ -1,4 +1,4 @@
-import { ChefHat, Clock, CookingPot, Gauge, Heart, Users } from 'lucide-react'
+import { ChefHat, Clock, Gauge, Heart, Users } from 'lucide-react'
 import React, { useState } from 'react'
 import { type Recipe as RecipeType } from '../../contexts/types'
 import { useTranslation } from 'react-i18next'
@@ -101,7 +101,6 @@ const Recipe: React.FC<RecipeProps> = ({
       </div>
       <div className="sm:px-6 px-4">
         <div className="flex items-center gap-3 mb-4">
-          <CookingPot className="min-w-6 min-h-6 text-green-500" />
           <h1 className="text-xl sm:text-3xl font-bold text-gray-800">
             {recipe?.title}
           </h1>

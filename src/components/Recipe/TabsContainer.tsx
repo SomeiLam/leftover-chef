@@ -15,12 +15,7 @@ import classNames from 'classnames'
 import { useTranslation } from 'react-i18next'
 
 interface TabsContainerProps {
-  recipes: {
-    id: string
-    english: RecipeType
-    chinese: RecipeType
-    japanese: RecipeType
-  }[]
+  recipes: RecipeType[]
 }
 
 const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
@@ -31,13 +26,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
   const [openRecipeId, setOpenRecipeId] = useState<string | null>(null)
   const [servingMultiplier, setServingMultiplier] = useState(1)
 
-  const { t, i18n } = useTranslation()
-  const language =
-    i18n.language === 'zh'
-      ? 'chinese'
-      : i18n.language === 'ja'
-        ? 'japanese'
-        : 'english'
+  const { t } = useTranslation()
 
   const handleTabClick = (id: string) => {
     setSelectedRecipeId(id)
@@ -142,17 +131,15 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
                   >
                     <div className="flex flex-col gap-2 px-3">
                       <div className="flex flex-row gap-3 flex-wrap">
-                        {recipe[language].preference.length > 0 ? (
-                          recipe[language].preference?.map((pre) =>
+                        {recipe.preference.length > 0 ? (
+                          recipe.preference?.map((pre) =>
                             renderPreferenceIcons(pre)
                           )
                         ) : (
                           <div className="h-5" />
                         )}
                       </div>
-                      <h3 className="font-medium truncate">
-                        {recipe[language].title}
-                      </h3>
+                      <h3 className="font-medium truncate">{recipe.title}</h3>
                     </div>
                   </div>
                 ))}
@@ -173,7 +160,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
                   transition={{ duration: 0.3 }}
                 >
                   <Recipe
-                    recipe={selectedRecipe[language]}
+                    recipe={selectedRecipe}
                     setServingMultiplier={setServingMultiplier}
                     servingMultiplier={servingMultiplier}
                   />
@@ -204,13 +191,11 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
               >
                 <div className="flex flex-col gap-1 max-w-11/12">
                   <div className="flex flex-row gap-3 flex-wrap">
-                    {recipe[language].preference?.map((pre) =>
+                    {recipe.preference?.map((pre) =>
                       renderPreferenceIcons(pre)
                     )}
                   </div>
-                  <h3 className="font-medium truncate">
-                    {recipe[language].title}
-                  </h3>
+                  <h3 className="font-medium truncate">{recipe.title}</h3>
                 </div>
                 {/* Icon or indicator for open/close */}
                 <span className="text-sm text-gray-500">
@@ -231,7 +216,7 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
                   >
                     <div className="p-3" id={recipe.id}>
                       <Recipe
-                        recipe={recipe[language]}
+                        recipe={recipe}
                         setServingMultiplier={setServingMultiplier}
                         servingMultiplier={servingMultiplier}
                       />

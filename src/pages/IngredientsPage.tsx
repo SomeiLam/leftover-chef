@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
+import imageCompression from 'browser-image-compression'
 import { Plus, ArrowRight, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { Lang, useIngredients } from '../contexts/IngredientsContext'
@@ -7,11 +8,32 @@ import { useNavigate } from 'react-router-dom'
 import { TextInput } from '../components/UI'
 import { Loading } from '../components/Loading'
 
-const API_URL = 'http://localhost:5000'
+const API_URL = import.meta.env.VITE_BACKEND_API
+// const API_URL = 'http://localhost:5000'
+
+const compressImage = async (file: File) => {
+  // Configure compression options
+  const options = {
+    maxSizeMB: 1, // Target maximum size in MB (adjust as needed)
+    maxWidthOrHeight: 1024, // Limit the width/height (e.g., 1024px)
+    useWebWorker: true, // Use a web worker for performance
+  }
+
+  try {
+    // Compress the file
+    const compressedFile = await imageCompression(file, options)
+    return compressedFile
+  } catch (error) {
+    console.error('Image compression error:', error)
+    // Fallback to the original file if compression fails
+    return file
+  }
+}
 
 const fetchIngredients = async (data: { imagePath: File; language: Lang }) => {
+  const compressedFile = await compressImage(data.imagePath)
   const formData = new FormData()
-  formData.append('image', data.imagePath)
+  formData.append('image', compressedFile)
   formData.append('language', data.language)
 
   const response = await fetch(`${API_URL}/get-ingredients`, {
@@ -34,7 +56,6 @@ const IngredientsPage: React.FC = () => {
   const [inputValue, setInputValue] = useState('')
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const navigate = useNavigate()
-
   const {
     imagePath,
     addIngredient,
@@ -42,6 +63,7 @@ const IngredientsPage: React.FC = () => {
     ingredients,
     removeIngredient,
   } = useIngredients()
+  console.log('ingredients', ingredients, imagePath)
 
   const handleToggleIngredient = (id: string) => {
     const updatedIngredients = ingredients.map((ingredient) =>
@@ -126,10 +148,14 @@ const IngredientsPage: React.FC = () => {
     } else {
       setLoading(false)
     }
-  }, [])
+  }, [imagePath])
 
   if (loading) {
     return <Loading type="upload" />
+  }
+
+  if (error) {
+    return <p className="text-red-500 ml-20">{error}</p>
   }
 
   return (
@@ -139,9 +165,15 @@ const IngredientsPage: React.FC = () => {
       className="w-full max-w-4xl mx-auto space-y-8"
     >
       <div className="text-center space-y-4">
-        <h1 className="text-3xl font-bold text-gray-800">
-          {t('ingredients.title')}
-        </h1>
+        <div className="flex flex-row items-center gap-2 justify-center">
+          <motion.h1
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-500 text-transparent bg-clip-text"
+          >
+            {t('ingredients.title')}
+          </motion.h1>
+        </div>
         {imagePath ? (
           <p className="text-gray-600">{t('ingredients.subtitle')}</p>
         ) : (
@@ -264,7 +296,7 @@ const IngredientsPage: React.FC = () => {
                 {t('input.add')}
               </motion.button>
             </div>
-            <div className="space-y-2">
+            <div className="space-y-2 mb-5">
               <AnimatePresence>
                 {ingredients.map((ingredient) => {
                   if (!ingredient.nutrients)

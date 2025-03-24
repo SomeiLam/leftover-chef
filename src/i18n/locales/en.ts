@@ -19,6 +19,7 @@ export default {
       cancel: 'Cancel',
       save: 'Save',
       readyToGo: 'Ready to Go',
+      remove: 'Remove',
     },
     auth: {
       welcome: 'Welcome Back',

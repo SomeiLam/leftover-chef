@@ -70,7 +70,7 @@ interface IngredientsContextType {
   removeIngredient: (id: string) => void
   setIngredients: (ingredients: Ingredient[]) => void
   setIsImage: (isImage: boolean) => void
-  setImagePath: (path: File) => void
+  setImagePath: (path: File | null) => void
   setImageIngredients: (ingredients: Ingredient[]) => void
   updatePreferences: (preferences: Preferences) => void
   updateLanguage: (lang: Lang) => void
@@ -129,7 +129,7 @@ const IngredientsProvider: React.FC<{ children: React.ReactNode }> = ({
     }))
   }
 
-  const setImagePath = (path: File) => {
+  const setImagePath = (path: File | null) => {
     if (path) {
       setState((prev) => ({
         ...prev,

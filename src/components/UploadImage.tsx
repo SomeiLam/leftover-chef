@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Camera, ArrowRight } from 'lucide-react'
+import { Camera, ArrowRight, Trash } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
@@ -14,7 +14,7 @@ const UploadImage: React.FC<UploadImageProps> = ({ onMethodChange }) => {
   const [uploadedImage, setUploadedImage] = useState<File | null>(null)
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const navigate = useNavigate()
-  const { setImagePath } = useIngredients()
+  const { setImagePath, setIngredients, ingredients } = useIngredients()
 
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0]
@@ -22,6 +22,7 @@ const UploadImage: React.FC<UploadImageProps> = ({ onMethodChange }) => {
       setUploadedImage(file)
       setPreviewUrl(URL.createObjectURL(file))
       setImagePath(file)
+      setIngredients(ingredients.filter((ingredient) => !ingredient.fromImage))
     }
   }
 
@@ -103,16 +104,34 @@ const UploadImage: React.FC<UploadImageProps> = ({ onMethodChange }) => {
         </AnimatePresence>
       </motion.div>
 
-      <div className="flex justify-between items-center">
-        <motion.button
-          whileHover={{ scale: 1.05 }}
-          onClick={() => onMethodChange('text')}
-          className="text-purple-500 hover:text-purple-600 font-medium"
-        >
-          {t('input.manualInput')}
-        </motion.button>
-
-        {uploadedImage && (
+      {!uploadedImage && (
+        <div className="flex justify-between items-center">
+          <motion.button
+            whileHover={{ scale: 1.05 }}
+            onClick={() => onMethodChange('text')}
+            className="text-purple-500 hover:text-purple-600 font-medium"
+          >
+            {t('input.manualInput')}
+          </motion.button>
+        </div>
+      )}
+      {uploadedImage && (
+        <div className="flex justify-end items-center gap-4">
+          <motion.button
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            onClick={() => {
+              setPreviewUrl(null)
+              setUploadedImage(null)
+              setImagePath(null)
+            }}
+            className="flex items-center gap-2 px-4 py-2 border border-red-500 text-red-500 rounded-lg hover:from-purple-600 hover:to-blue-600 transition-colors"
+          >
+            <Trash className="w-5 h-5 text-red-500" />
+            {t('common.remove')}
+          </motion.button>
           <motion.button
             initial={{ opacity: 0, x: 20 }}
             animate={{ opacity: 1, x: 0 }}
@@ -124,8 +143,8 @@ const UploadImage: React.FC<UploadImageProps> = ({ onMethodChange }) => {
             {t('common.next')}
             <ArrowRight className="w-5 h-5" />
           </motion.button>
-        )}
-      </div>
+        </div>
+      )}
     </motion.div>
   )
 }

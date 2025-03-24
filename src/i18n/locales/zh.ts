@@ -18,6 +18,7 @@ export default {
       back: '返回',
       cancel: '取消',
       save: '保存',
+      remove: '削除',
     },
     auth: {
       welcome: '欢迎回来',

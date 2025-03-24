@@ -72,7 +72,7 @@ const ManualInput: React.FC<ManualInputProps> = ({ onMethodChange }) => {
             className="px-4 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 hover:cursor-pointer transition-colors flex items-center gap-2"
           >
             <Plus className="w-5 h-5" />
-            {t('input.add')}
+            <span className="hidden sm:flex">{t('input.add')}</span>
           </motion.button>
         </div>
 

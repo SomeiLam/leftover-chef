@@ -1,4 +1,4 @@
-import { LogIn } from 'lucide-react'
+import { LogIn, LogOut } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
 import { motion } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
@@ -60,8 +60,8 @@ const AppBar = () => {
                   onClick={handleSignOut}
                   className="flex items-center gap-1 text-white hover:text-purple-200"
                 >
-                  <span>{t('nav.logout')}</span>
-                  {/* <LogOut className="w-5 h-5" /> */}
+                  <span className="hidden sm:flex">{t('nav.logout')}</span>
+                  <LogOut className="sm:hidden w-5 h-5" />
                 </motion.button>
               </>
             ) : (
