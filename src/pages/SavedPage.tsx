@@ -1,5 +1,4 @@
 import { useState } from 'react'
-import { useIngredients } from '../contexts/IngredientsContext'
 import {
   Amphora,
   Baby,
@@ -14,13 +13,15 @@ import { AnimatePresence, motion } from 'framer-motion'
 import Recipe from '../components/Recipe/Recipe'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
+import useRecipe from '../hooks/useRecipe'
+import { Loading } from '../components/Loading'
 
 const SavedPage = () => {
-  const { recipes } = useIngredients()
   const [openRecipeId, setOpenRecipeId] = useState<string | null>(null)
   const [servingMultiplier, setServingMultiplier] = useState(1)
   const { t } = useTranslation()
   const navigate = useNavigate()
+  const { savedRecipes, isLoading } = useRecipe()
 
   const toggleAccordion = (id: string) => {
     setOpenRecipeId((prev) => (prev === id ? null : id))
@@ -35,7 +36,7 @@ const SavedPage = () => {
           className="flex flex-row gap-1 items-center text-red-800"
         >
           <Amphora className="h-4 w-4" />
-          <p className="text-sm">Traditional</p>
+          <p className="text-sm">{t('preferences.cooking.traditional')}</p>
         </div>
       )
     } else if (pre === 'Microwave only') {
@@ -45,7 +46,7 @@ const SavedPage = () => {
           className="flex flex-row gap-1 items-center text-blue-800"
         >
           <Microwave className="h-4 w-4" />
-          <p className="text-sm">Microwave</p>
+          <p className="text-sm">{t('preferences.cooking.microwaveOnly')}</p>
         </div>
       )
     } else if (pre === 'Quick cook') {
@@ -55,7 +56,7 @@ const SavedPage = () => {
           className="flex flex-row gap-1 items-center text-orange-500"
         >
           <FastForward className="h-4 w-4" />
-          <p className="text-sm">Quick</p>
+          <p className="text-sm">{t('preferences.cooking.quickCook')}</p>
         </div>
       )
     } else if (pre === 'Spicy') {
@@ -65,7 +66,7 @@ const SavedPage = () => {
           className="flex flex-row gap-1 items-center text-red-500"
         >
           <Flame className="h-4 w-4" />
-          <p className="text-sm">Spicy</p>
+          <p className="text-sm">{t('preferences.spiceLevel.spicy')}</p>
         </div>
       )
     } else {
@@ -76,17 +77,21 @@ const SavedPage = () => {
           className="flex flex-row gap-1 items-center text-green-700"
         >
           <Baby className="h-4 w-4" />
-          <p className="text-sm">Easy</p>
+          <p className="text-sm">{t('preferences.cooking.beginner')}</p>
         </div>
       )
     }
   }
 
+  if (isLoading) {
+    return <Loading type="process" />
+  }
+
   return (
     <div className="flex flex-col gap-2">
       <AnimatePresence>
-        {recipes.length > 0 ? (
-          recipes.map((recipe) => {
+        {savedRecipes.length > 0 ? (
+          savedRecipes.map((recipe) => {
             const isOpen = openRecipeId === recipe.id
             return (
               <motion.div
@@ -147,12 +152,9 @@ const SavedPage = () => {
         ) : (
           <div className="mx-auto w-full text-center">
             <h1 className="text-2xl font-semibold text-gray-800 m-2">
-              No Saved Recipes Yet!
+              {t('save.noRecipes')}
             </h1>
-            <p className="text-gray-600 mb-6">
-              You haven’t saved any recipes. Explore our collection or create
-              your own dish, then save it here for easy access.
-            </p>
+            <p className="text-gray-600 mb-6">{t('save.noRecipesMessage')}</p>
 
             <div className="flex justify-center space-x-4">
               <motion.button

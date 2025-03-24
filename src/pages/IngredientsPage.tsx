@@ -63,7 +63,6 @@ const IngredientsPage: React.FC = () => {
     ingredients,
     removeIngredient,
   } = useIngredients()
-  console.log('ingredients', ingredients, imagePath)
 
   const handleToggleIngredient = (id: string) => {
     const updatedIngredients = ingredients.map((ingredient) =>

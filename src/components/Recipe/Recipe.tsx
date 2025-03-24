@@ -2,8 +2,8 @@ import { ChefHat, Clock, Gauge, Heart, Users } from 'lucide-react'
 import React, { useState } from 'react'
 import { type Recipe as RecipeType } from '../../contexts/types'
 import { useTranslation } from 'react-i18next'
-import { useIngredients } from '../../contexts/IngredientsContext'
 import classNames from 'classnames'
+import useRecipe from '../../hooks/useRecipe'
 
 interface RecipeProps {
   recipe: RecipeType
@@ -17,8 +17,8 @@ const Recipe: React.FC<RecipeProps> = ({
   setServingMultiplier,
 }) => {
   const { t } = useTranslation()
-  const { recipes: savedRecipes, addRecipe, removeRecipe } = useIngredients()
   const [isAnimating, setIsAnimating] = useState(false)
+  const { saveRecipe, removeRecipe, savedRecipes } = useRecipe()
 
   // Check if the recipe is already saved
   const isSaved = savedRecipes.some((r) => r.id === recipe.id)
@@ -27,9 +27,14 @@ const Recipe: React.FC<RecipeProps> = ({
   const handleToggleSave = () => {
     setIsAnimating(true)
     if (isSaved) {
-      removeRecipe(recipe.id)
+      const saved = savedRecipes.find(
+        (savedRecipe) => savedRecipe.id === recipe.id
+      )
+      if (saved) {
+        removeRecipe(saved.docId as string)
+      }
     } else {
-      addRecipe(recipe)
+      saveRecipe(recipe)
     }
     // Reset animation state after animation completes
     setTimeout(() => setIsAnimating(false), 300)

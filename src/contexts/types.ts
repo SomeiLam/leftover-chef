@@ -21,6 +21,8 @@ type Preferences =
   | 'Spicy'
 
 type Recipe = {
+  userId?: string
+  docId?: string
   id: string
   title: string
   time: string
