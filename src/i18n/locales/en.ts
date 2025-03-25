@@ -157,6 +157,7 @@ export default {
       additionalIngredients: 'Additional Ingredients',
       instructions: 'Instructions',
       note: 'Please note that while the AI carefully considers your selected ingredients and preferences, the final result may include slight variations or additional ingredients to enhance flavor and balance. Feel free to adjust the recipe to suit your taste! 🌿',
+      loginMessage: 'Please login to save recipe',
     },
   },
 }

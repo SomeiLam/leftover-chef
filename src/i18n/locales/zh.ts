@@ -151,6 +151,7 @@ export default {
       additionalIngredients: '额外食材',
       instructions: '步骤',
       note: '请注意，尽管 AI 会仔细考虑您所选择的食材和偏好，但最终结果可能会略有不同或添加额外的食材，以增强风味和平衡。请随意根据您的口味调整食谱！🌿',
+      loginMessage: '请登录以保存食谱',
     },
   },
 }

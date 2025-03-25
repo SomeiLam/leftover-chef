@@ -4,6 +4,7 @@ import { type Recipe as RecipeType } from '../../contexts/types'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import useRecipe from '../../hooks/useRecipe'
+import useAuth from '../../hooks/useAuth'
 
 interface RecipeProps {
   recipe: RecipeType
@@ -18,7 +19,9 @@ const Recipe: React.FC<RecipeProps> = ({
 }) => {
   const { t } = useTranslation()
   const [isAnimating, setIsAnimating] = useState(false)
+  const [notLoginMsg, setNotLoginMsg] = useState(false)
   const { saveRecipe, removeRecipe, savedRecipes } = useRecipe()
+  const user = useAuth()
 
   // Check if the recipe is already saved
   const isSaved = savedRecipes.some((r) => r.id === recipe.id)
@@ -26,6 +29,9 @@ const Recipe: React.FC<RecipeProps> = ({
   // Toggle the recipe's saved state
   const handleToggleSave = () => {
     setIsAnimating(true)
+    if (!user) {
+      setNotLoginMsg(true)
+    }
     if (isSaved) {
       const saved = savedRecipes.find(
         (savedRecipe) => savedRecipe.id === recipe.id
@@ -51,7 +57,10 @@ const Recipe: React.FC<RecipeProps> = ({
 
   const ServingSelector = (
     <div className="flex items-center gap-2">
-      <label htmlFor="servings" className="text-sm text-gray-600">
+      <label
+        htmlFor="servings"
+        className="text-sm text-gray-600 hidden sm:flex"
+      >
         Servings:
       </label>
       <select
@@ -105,12 +114,20 @@ const Recipe: React.FC<RecipeProps> = ({
         {SaveButton}
       </div>
       <div className="sm:px-6 px-4">
-        <div className="flex items-center gap-3 mb-4">
+        <div className="flex items-center gap-3 mb-2 justify-between">
           <h1 className="text-xl sm:text-3xl font-bold text-gray-800">
             {recipe?.title}
           </h1>
-          <div className="flex sm:hidden">{SaveButton}</div>
+          <div className="flex sm:hidden">
+            {ServingSelector}
+            {SaveButton}
+          </div>
         </div>
+        {notLoginMsg && (
+          <p className="text-gray-700 text-sm text-end">
+            {t('recipes.loginMessage')}
+          </p>
+        )}
         <div className="flex items-center mb-4 py-4 border-b">
           <h4 className="text-gray-700">{recipe?.description}</h4>
         </div>
