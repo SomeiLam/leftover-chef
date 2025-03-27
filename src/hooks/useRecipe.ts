@@ -11,7 +11,7 @@ import {
   onSnapshot,
 } from 'firebase/firestore'
 import useAuth from './useAuth'
-import { Recipe } from '../contexts/types'
+import { Recipe } from '../types'
 import { useEffect, useState } from 'react'
 
 const db = getFirestore()
@@ -38,7 +38,6 @@ const useRecipe = () => {
       const recipeRef = doc(db, 'recipes', recipeId)
       // Delete the document
       await deleteDoc(recipeRef)
-      // Optionally, refresh the list of recipes after deletion
       getRecipe()
     } catch (error) {
       console.error('Error removing recipe: ', error)

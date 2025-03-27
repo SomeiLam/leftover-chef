@@ -1,17 +1,12 @@
-// contexts/IngredientsContext.tsx
-
 import React, { createContext, useState, useContext } from 'react'
-import { Ingredient, Recipe } from './types' // Import Ingredient type
+import { Ingredient } from '../types'
 
 // Define the state shape
 interface IngredientsState {
   ingredients: Ingredient[]
-  imageIngredients: Ingredient[]
   isImage: boolean
   imagePath: File | null
   preferences: Preferences
-  language: Lang
-  recipes: Recipe[]
 }
 
 export type Cuisine =
@@ -24,8 +19,6 @@ export type Cuisine =
   | 'french'
   | 'thai'
   | 'korean'
-
-export type Lang = 'English' | '日本語' | '中文'
 
 export interface Preferences {
   traditional: boolean
@@ -40,7 +33,6 @@ export interface Preferences {
 // Initial state
 const initialState: IngredientsState = {
   ingredients: [],
-  imageIngredients: [],
   isImage: true,
   imagePath: null,
   preferences: {
@@ -52,8 +44,6 @@ const initialState: IngredientsState = {
     cuisine: 'any',
     customCuisine: '',
   },
-  language: 'English',
-  recipes: [],
 }
 
 // Define the context type
@@ -61,21 +51,14 @@ interface IngredientsContextType {
   ingredients: Ingredient[]
   isImage: boolean
   imagePath: File | null
-  imageIngredients: Ingredient[]
   preferences: Preferences
-  language: Lang
-  recipes: Recipe[]
   addIngredient: (ingredient: Ingredient) => void
   toggleIngredient: (id: string) => void
   removeIngredient: (id: string) => void
   setIngredients: (ingredients: Ingredient[]) => void
   setIsImage: (isImage: boolean) => void
   setImagePath: (path: File | null) => void
-  setImageIngredients: (ingredients: Ingredient[]) => void
   updatePreferences: (preferences: Preferences) => void
-  updateLanguage: (lang: Lang) => void
-  addRecipe: (recipe: Recipe) => void
-  removeRecipe: (id: string) => void
 }
 
 // Create the context
@@ -138,38 +121,10 @@ const IngredientsProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }
 
-  const setImageIngredients = (ingredients: Ingredient[]) => {
-    setState((prev) => ({
-      ...prev,
-      imageIngredients: ingredients,
-    }))
-  }
-
   const updatePreferences = (preferences: Preferences) => {
     setState((prev) => ({
       ...prev,
       preferences,
-    }))
-  }
-
-  const updateLanguage = (lang: Lang) => {
-    setState((prev) => ({
-      ...prev,
-      language: lang,
-    }))
-  }
-
-  const addRecipe = (recipe: Recipe) => {
-    setState((prev) => ({
-      ...prev,
-      recipes: [...prev.recipes, recipe],
-    }))
-  }
-
-  const removeRecipe = (id: string) => {
-    setState((prev) => ({
-      ...prev,
-      recipes: prev.recipes.filter((recipe) => recipe.id !== id),
     }))
   }
 
@@ -179,21 +134,14 @@ const IngredientsProvider: React.FC<{ children: React.ReactNode }> = ({
         ingredients: state.ingredients,
         isImage: state.isImage,
         imagePath: state.imagePath,
-        imageIngredients: state.imageIngredients,
         preferences: state.preferences,
-        language: state.language,
-        recipes: state.recipes,
         addIngredient,
         toggleIngredient,
         removeIngredient,
         setIngredients,
         setIsImage,
         setImagePath,
-        setImageIngredients,
         updatePreferences,
-        updateLanguage,
-        addRecipe,
-        removeRecipe,
       }}
     >
       {children}
@@ -202,7 +150,7 @@ const IngredientsProvider: React.FC<{ children: React.ReactNode }> = ({
 }
 
 // Custom hook to use the ingredients context
-export const useIngredients = (): IngredientsContextType => {
+const useIngredients = (): IngredientsContextType => {
   const context = useContext(IngredientsContext)
   if (!context) {
     throw new Error('useIngredients must be used within an IngredientsProvider')
@@ -210,4 +158,4 @@ export const useIngredients = (): IngredientsContextType => {
   return context
 }
 
-export { IngredientsProvider }
+export { IngredientsProvider, useIngredients }

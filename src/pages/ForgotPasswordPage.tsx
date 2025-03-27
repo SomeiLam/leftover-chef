@@ -17,7 +17,6 @@ const ForgotPasswordPage = () => {
     setError('')
 
     try {
-      // Here you would implement your actual password reset logic
       await new Promise((resolve) => setTimeout(resolve, 1000)) // Simulated delay
       setSuccess(true)
       // eslint-disable-next-line @typescript-eslint/no-unused-vars

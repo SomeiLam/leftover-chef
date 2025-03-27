@@ -36,4 +36,6 @@ type Recipe = {
   calories: string
 }
 
-export { type Ingredient, type Step, type Recipe }
+type Lang = 'English' | '日本語' | '中文'
+
+export { type Ingredient, type Step, type Recipe, type Lang, type Preferences }

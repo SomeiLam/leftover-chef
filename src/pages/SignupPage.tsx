@@ -22,7 +22,6 @@ const SignUpPage: React.FC = () => {
   const [password, setPassword] = useState('')
   const [confirmPassword, setConfirmPassword] = useState('')
 
-  // Function to sign up with email/password
   const signUpWithEmail = async () => {
     if (password !== confirmPassword) {
       setError(t('auth.passwordsDontMatch') || 'Passwords do not match')

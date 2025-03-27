@@ -12,13 +12,12 @@ import IngredientsPage from './pages/IngredientsPage'
 import PreferencesPage from './pages/PreferencesPage'
 import RecipesPage from './pages/RecipesPage'
 import SavedPage from './pages/SavedPage'
-import { ContextProvider } from './contexts/ContextProvider'
 import { AnimatePresence, motion } from 'framer-motion'
-import NavigateBack from './components/NavigateBack'
-import { ScrollToTop } from './components/UI'
+import { ScrollToTop, NavigateBack } from './components/UI'
 import LoginPage from './pages/LoginPage'
 import SignUpPage from './pages/SignupPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
+import { IngredientsProvider } from './contexts/IngredientsContext'
 
 const pageTransition = {
   initial: { opacity: 0, x: 100 },
@@ -54,7 +53,7 @@ function App() {
         v7_startTransition: true,
       }}
     >
-      <ContextProvider>
+      <IngredientsProvider>
         <div className="max-w-screen overflow-x-hidden min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
           <AppBar />
           <ScrollToTop />
@@ -78,7 +77,7 @@ function App() {
             </Suspense>
           </main>
         </div>
-      </ContextProvider>
+      </IngredientsProvider>
     </Router>
   )
 }

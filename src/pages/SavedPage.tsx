@@ -14,7 +14,7 @@ import Recipe from '../components/Recipe/Recipe'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 import useRecipe from '../hooks/useRecipe'
-import { Loading } from '../components/Loading'
+import { Loading } from '../components/UI'
 
 const SavedPage = () => {
   const [openRecipeId, setOpenRecipeId] = useState<string | null>(null)

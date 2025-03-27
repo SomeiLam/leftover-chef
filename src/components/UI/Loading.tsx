@@ -7,7 +7,7 @@ type LoadingProps = {
   type: LoadingType
 }
 
-export function Loading({ type }: LoadingProps) {
+const Loading: React.FC<LoadingProps> = ({ type }) => {
   const { t } = useTranslation()
 
   const loadingMessages = {
@@ -61,3 +61,5 @@ export function Loading({ type }: LoadingProps) {
     </div>
   )
 }
+
+export default Loading

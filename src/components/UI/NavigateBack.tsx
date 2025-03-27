@@ -1,7 +1,7 @@
 import { ChevronLeft } from 'lucide-react'
 import { motion } from 'framer-motion'
 import { useLocation, useNavigate } from 'react-router-dom'
-import { useIngredients } from '../contexts/IngredientsContext'
+import { useIngredients } from '../../contexts/IngredientsContext'
 
 const NavigateBack = () => {
   const navigate = useNavigate()

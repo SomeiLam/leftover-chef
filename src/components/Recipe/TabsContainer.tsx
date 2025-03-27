@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { AnimatePresence, motion } from 'framer-motion'
-import { type Recipe as RecipeType } from '../../contexts/types'
+import { type Recipe as RecipeType } from '../../types'
 import Recipe from './Recipe'
 import {
   Amphora,
@@ -21,7 +21,7 @@ interface TabsContainerProps {
 const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
   // For the desktop tab layout
   const [selectedRecipeId, setSelectedRecipeId] = useState<string>(
-    recipes[0].id
+    recipes[0]?.id
   )
   const [openRecipeId, setOpenRecipeId] = useState<string | null>(null)
   const [servingMultiplier, setServingMultiplier] = useState(1)
@@ -131,8 +131,8 @@ const TabsContainer: React.FC<TabsContainerProps> = ({ recipes }) => {
                   >
                     <div className="flex flex-col gap-2 px-3">
                       <div className="flex flex-row gap-3 flex-wrap">
-                        {recipe.preference.length > 0 ? (
-                          recipe.preference?.map((pre) =>
+                        {recipe?.preference?.length > 0 ? (
+                          recipe?.preference?.map((pre) =>
                             renderPreferenceIcons(pre)
                           )
                         ) : (

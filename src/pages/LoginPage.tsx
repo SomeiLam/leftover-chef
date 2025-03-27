@@ -20,7 +20,6 @@ const SignUpPage: React.FC = () => {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
 
-  // Function to sign up with email and password
   const signUpWithEmail = async () => {
     try {
       setIsLoading(true)

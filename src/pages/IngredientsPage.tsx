@@ -1,12 +1,13 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import imageCompression from 'browser-image-compression'
 import { Plus, ArrowRight, Trash2 } from 'lucide-react'
 import { useTranslation } from 'react-i18next'
-import { Lang, useIngredients } from '../contexts/IngredientsContext'
+import { useIngredients } from '../contexts/IngredientsContext'
 import { useNavigate } from 'react-router-dom'
-import { TextInput } from '../components/UI'
-import { Loading } from '../components/Loading'
+import { TextInput, Loading } from '../components/UI'
+import { useQuery } from '@tanstack/react-query'
+import { Lang } from '../types'
 
 const API_URL = import.meta.env.VITE_BACKEND_API
 // const API_URL = 'http://localhost:5000'
@@ -30,11 +31,17 @@ const compressImage = async (file: File) => {
   }
 }
 
-const fetchIngredients = async (data: { imagePath: File; language: Lang }) => {
-  const compressedFile = await compressImage(data.imagePath)
+const fetchIngredients = async ({
+  imagePath,
+  language,
+}: {
+  imagePath: File
+  language: Lang
+}) => {
+  const compressedFile = await compressImage(imagePath)
   const formData = new FormData()
   formData.append('image', compressedFile)
-  formData.append('language', data.language)
+  formData.append('language', language)
 
   const response = await fetch(`${API_URL}/get-ingredients`, {
     method: 'POST',
@@ -42,7 +49,8 @@ const fetchIngredients = async (data: { imagePath: File; language: Lang }) => {
   })
 
   if (!response.ok) {
-    throw new Error('Failed to get ingredients')
+    const errorMessage = await response.text()
+    throw new Error(errorMessage || 'Failed to get ingredients')
   }
 
   return response.json()
@@ -50,12 +58,11 @@ const fetchIngredients = async (data: { imagePath: File; language: Lang }) => {
 
 const IngredientsPage: React.FC = () => {
   const { t, i18n } = useTranslation()
-  const [loading, setLoading] = useState(false)
-  const [hasFetched, setHasFetched] = useState(false)
   const [error, setError] = useState('')
   const [inputValue, setInputValue] = useState('')
   const [previewUrl, setPreviewUrl] = useState<string | null>(null)
   const navigate = useNavigate()
+
   const {
     imagePath,
     addIngredient,
@@ -63,6 +70,38 @@ const IngredientsPage: React.FC = () => {
     ingredients,
     removeIngredient,
   } = useIngredients()
+
+  const language = useMemo<Lang>(
+    () =>
+      i18n.language === 'zh'
+        ? '中文'
+        : i18n.language === 'ja'
+          ? '日本語'
+          : 'English',
+    [i18n.language]
+  )
+
+  const shouldFetch = useMemo(
+    () =>
+      !!imagePath &&
+      ingredients.filter((ingredient) => ingredient.fromImage).length === 0,
+    [imagePath, ingredients]
+  )
+
+  const {
+    data: fetchedIngredients,
+    isLoading,
+    isError,
+  } = useQuery({
+    queryKey: ['ingredients', imagePath?.name, language],
+    queryFn: () =>
+      fetchIngredients({
+        imagePath: imagePath!,
+        language,
+      }),
+    enabled: shouldFetch,
+    retry: false,
+  })
 
   const handleToggleIngredient = (id: string) => {
     const updatedIngredients = ingredients.map((ingredient) =>
@@ -79,7 +118,7 @@ const IngredientsPage: React.FC = () => {
         id: Date.now().toString(),
         name: inputValue.trim(),
       }
-      addIngredient(newIngredient) // Dispatches the action to add the ingredient
+      addIngredient(newIngredient)
       setInputValue('')
     }
   }
@@ -106,55 +145,32 @@ const IngredientsPage: React.FC = () => {
   }
 
   useEffect(() => {
-    // Replace '/path/to/image.png' with your actual image path.
-    const fromImageIngredients = ingredients.filter(
-      (ingredient) => ingredient.fromImage
-    )
-    if (imagePath) {
-      const imageUrl = URL.createObjectURL(imagePath)
-      setPreviewUrl(imageUrl)
-      if (fromImageIngredients.length === 0) {
-        const requestData = {
-          imagePath,
-          language:
-            i18n.language === 'zh'
-              ? '中文'
-              : i18n.language === 'ja'
-                ? '日本語'
-                : ('English' as Lang),
-        }
-        setLoading(true)
+    if (fetchedIngredients && fetchedIngredients.length > 0) {
+      setIngredients([...ingredients, ...fetchedIngredients])
+    } else if (fetchedIngredients && fetchedIngredients.length === 0) {
+      setError(t('ingredients.noFoodDetected'))
+    }
+  }, [fetchedIngredients])
 
-        fetchIngredients(requestData)
-          .then((data) => {
-            if (!hasFetched) {
-              setHasFetched(true)
-              if (data.length > 0) {
-                setIngredients([...ingredients, ...data])
-              } else {
-                setError(t('ingredients.noFoodDetected'))
-              }
-            }
-            setLoading(false)
-          })
-          .catch((err) => {
-            setError(err)
-            setLoading(false)
-          })
-      } else {
-        setLoading(false)
-      }
-    } else {
-      setLoading(false)
+  useEffect(() => {
+    if (imagePath) {
+      const url = URL.createObjectURL(imagePath)
+      setPreviewUrl(url)
+
+      return () => URL.revokeObjectURL(url)
     }
   }, [imagePath])
 
-  if (loading) {
+  if (isLoading) {
     return <Loading type="upload" />
   }
 
-  if (error) {
-    return <p className="text-red-500 ml-20">{error}</p>
+  if (isError) {
+    return (
+      <p className="text-red-500 ml-20">
+        {t('ingredients.fetchIngredientsError')}
+      </p>
+    )
   }
 
   return (

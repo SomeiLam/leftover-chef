@@ -1,6 +1,6 @@
 import { ChefHat, Clock, Gauge, Heart, Users } from 'lucide-react'
 import React, { useState } from 'react'
-import { type Recipe as RecipeType } from '../../contexts/types'
+import { type Recipe as RecipeType } from '../../types'
 import { useTranslation } from 'react-i18next'
 import classNames from 'classnames'
 import useRecipe from '../../hooks/useRecipe'
